@@ -30,12 +30,13 @@
 .content {
     flex-grow: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 18px;
     padding-bottom: 80px; /* 防止被底部导航栏遮挡 */
     position: relative;
     /* 强制重置对齐方式，防止被意外继承的居中样式污染 */
     text-align: left;
-    display: block; 
+    display: block;
 }
 
 /* 头部导航栏 */

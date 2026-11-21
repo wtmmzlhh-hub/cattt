@@ -156,6 +156,9 @@
     gap: 8px;
     color: #888;
     font-size: calc(14px * var(--app-font-scale));
+    flex: 1;
+    min-width: 0;
+    justify-content: flex-end;
 }
 
 .kkt-arrow {
