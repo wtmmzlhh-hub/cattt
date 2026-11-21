@@ -663,6 +663,11 @@
     font-size: 12px;
     color: var(--text-color);
     font-weight: 500;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
 }
 
 /* 底部导航栏 */
