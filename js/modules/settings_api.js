@@ -339,19 +339,19 @@ function _normalizeApiPresets(arr) {
     });
 }
 
-function _saveApiPresets(arr) {
+async function _saveApiPresets(arr) {
     db.apiPresets = _normalizeApiPresets(arr);
-    saveData();
+    await saveSetting('apiPresets');
     window.dispatchEvent(new CustomEvent('api-presets-updated'));
 }
 
-function populateApiSelect() {
+async function populateApiSelect() {
     const sel = document.getElementById('api-preset-select');
     if (!sel) return;
     const needsMigration = _getApiPresets().some(p => !p || !p.id);
     const presets = _normalizeApiPresets(_getApiPresets());
     db.apiPresets = presets;
-    if (needsMigration) saveData();
+    if (needsMigration) await saveSetting('apiPresets');
     sel.innerHTML = '<option value="">— 选择 API 预设 —</option>';
     presets.forEach(p => {
     const opt = document.createElement('option');
@@ -361,7 +361,7 @@ function populateApiSelect() {
     });
 }
 
-function saveCurrentApiAsPreset() {
+async function saveCurrentApiAsPreset() {
     const apiKeyEl = document.querySelector('#api-key');
     const apiUrlEl = document.querySelector('#api-url');
     const providerEl = document.querySelector('#api-provider');
@@ -384,7 +384,7 @@ function saveCurrentApiAsPreset() {
     const idx = presets.findIndex(p => p.name === name);
     const preset = {id: idx >= 0 ? presets[idx].id : _createApiPresetId(), name: name, data: data};
     if (idx >= 0) presets[idx] = preset; else presets.push(preset);
-    _saveApiPresets(presets);
+    await _saveApiPresets(presets);
     populateApiSelect();
     showToast('API 预设已保存');
 }
@@ -458,12 +458,12 @@ function openApiManageModal() {
         const renameBtn = document.createElement('button');
         renameBtn.className = 'btn';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function(){
+        renameBtn.onclick = async function(){
             const newName = prompt('输入新名称：', p.name);
             if (!newName) return;
             const all = _getApiPresets();
             all[idx].name = newName;
-            _saveApiPresets(all);
+            await _saveApiPresets(all);
             openApiManageModal();
             populateApiSelect();
         };
@@ -471,7 +471,7 @@ function openApiManageModal() {
         const delBtn = document.createElement('button');
         delBtn.className = 'btn';
         delBtn.textContent = '删除';
-        delBtn.onclick = function(){ if(!confirm('确定删除 "'+p.name+'" ?')) return; const all=_getApiPresets(); all.splice(idx,1); _saveApiPresets(all); openApiManageModal(); populateApiSelect(); };
+        delBtn.onclick = async function(){ if(!confirm('确定删除 "'+p.name+'" ?')) return; const all=_getApiPresets(); all.splice(idx,1); await _saveApiPresets(all); openApiManageModal(); populateApiSelect(); };
 
         btns.appendChild(applyBtn); btns.appendChild(renameBtn); btns.appendChild(delBtn);
 
@@ -497,7 +497,7 @@ function importApiPresets() {
         const f = e.target.files[0];
         if (!f) return;
         const r = new FileReader();
-        r.onload = function(){ try { const data = JSON.parse(r.result); if (Array.isArray(data)) { _saveApiPresets(data); populateApiSelect(); openApiManageModal(); } else alert('文件格式不正确'); } catch(e){ alert('导入失败：'+e.message); } };
+        r.onload = async function(){ try { const data = JSON.parse(r.result); if (Array.isArray(data)) { await _saveApiPresets(data); populateApiSelect(); openApiManageModal(); } else alert('文件格式不正确'); } catch(e){ alert('导入失败：'+e.message); } };
         r.readAsText(f);
     };
     inp.click();

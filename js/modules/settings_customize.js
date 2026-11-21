@@ -70,7 +70,7 @@ function setupCustomizeApp() {
                 textarea.value = preset.css;
                 db.globalCss = preset.css;
                 applyGlobalCss(preset.css);
-                saveData();
+                await saveSetting('globalCss');
                 showToast('全局CSS预设已应用');
             }
         }
@@ -88,7 +88,7 @@ function setupCustomizeApp() {
             } else {
                 db.globalCssPresets.push({ name, css });
             }
-            saveData();
+            await saveSetting('globalCssPresets');
             populateGlobalCssPresetSelect();
             showToast('全局CSS预设已保存');
         }
@@ -164,7 +164,7 @@ function setupCustomizeApp() {
         if (target.matches('#reset-send-sound-btn')) {
             document.getElementById('global-send-sound-url').value = '';
             db.globalSendSound = '';
-            saveData();
+            await saveSetting('globalSendSound');
             showToast('已重置');
         }
         if (target.matches('#test-receive-sound-btn')) {
@@ -183,7 +183,7 @@ function setupCustomizeApp() {
         if (target.matches('#reset-receive-sound-btn')) {
             document.getElementById('global-receive-sound-url').value = '';
             db.globalReceiveSound = '';
-            saveData();
+            await saveSetting('globalReceiveSound');
             showToast('已重置');
         }
     });
@@ -261,7 +261,7 @@ function setupCustomizeApp() {
 
                 const presets = _getFontPresets();
                 presets.push(newPreset);
-                _saveFontPresets(presets);
+                await _saveFontPresets(presets);
                 
                 await injectCustomFont(newPreset);
                 populateFontPresetSelect();
@@ -312,15 +312,15 @@ function setupCustomizeApp() {
 
         if (e.target.id === 'global-send-sound-url') {
             db.globalSendSound = e.target.value.trim();
-            saveData();
+            await saveSetting('globalSendSound');
         }
         if (e.target.id === 'global-receive-sound-url') {
             db.globalReceiveSound = e.target.value.trim();
-            saveData();
+            await saveSetting('globalReceiveSound');
         }
         if (e.target.id === 'multi-msg-sound-switch') {
             db.multiMsgSoundEnabled = e.target.checked;
-            saveData();
+            await saveSetting('multiMsgSoundEnabled');
         }
         if (e.target.id === 'global-send-sound-upload' || e.target.id === 'global-receive-sound-upload') {
             const file = e.target.files[0];

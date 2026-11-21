@@ -3,9 +3,9 @@
 function _getBubblePresets() {
     return db.bubbleCssPresets || [];
 }
-function _saveBubblePresets(arr) {
+async function _saveBubblePresets(arr) {
     db.bubbleCssPresets = arr || [];
-    saveData();
+    await saveSetting('bubbleCssPresets');
 }
 
 function populateBubblePresetSelect(selectId) { 
@@ -118,7 +118,7 @@ async function applyPresetToCurrentChat(presetName) {
     }
 }
 
-function saveCurrentTextareaAsPreset() {
+async function saveCurrentTextareaAsPreset() {
     const textarea = document.getElementById('setting-custom-bubble-css') || document.getElementById('setting-group-custom-bubble-css');
     if (!textarea) return showToast('找不到自定义 CSS 文本框');
     const css = textarea.value.trim();
@@ -163,7 +163,7 @@ function saveCurrentTextareaAsPreset() {
         presets.push(presetData);
     }
     
-    _saveBubblePresets(presets);
+    await _saveBubblePresets(presets);
     populateBubblePresetSelect('bubble-preset-select'); 
     populateBubblePresetSelect('group-bubble-preset-select');
     showToast('预设已保存');
@@ -205,12 +205,12 @@ function openManagePresetsModal() {
         renameBtn.className = 'btn';
         renameBtn.style.padding = '6px 8px;border-radius:8px';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function(){
+        renameBtn.onclick = async function(){
             const newName = prompt('输入新名称：', p.name);
             if (!newName) return;
             const presetsAll = _getBubblePresets();
             presetsAll[idx].name = newName;
-            _saveBubblePresets(presetsAll);
+            await _saveBubblePresets(presetsAll);
             openManagePresetsModal(); 
             populateBubblePresetSelect('bubble-preset-select'); populateBubblePresetSelect('group-bubble-preset-select');
         };
@@ -219,11 +219,11 @@ function openManagePresetsModal() {
         delBtn.className = 'btn btn-danger';
         delBtn.style.padding = '6px 8px;border-radius:8px';
         delBtn.textContent = '删除';
-        delBtn.onclick = function(){
+        delBtn.onclick = async function(){
             if (!confirm('确定删除预设 \"' + p.name + '\" ?')) return;
             const presetsAll = _getBubblePresets();
             presetsAll.splice(idx, 1);
-            _saveBubblePresets(presetsAll);
+            await _saveBubblePresets(presetsAll);
             openManagePresetsModal();
             populateBubblePresetSelect('bubble-preset-select'); populateBubblePresetSelect('group-bubble-preset-select');
         };
@@ -240,9 +240,9 @@ function openManagePresetsModal() {
 function _getMyPersonaPresets() {
     return db.myPersonaPresets || [];
 }
-function _saveMyPersonaPresets(arr) {
+async function _saveMyPersonaPresets(arr) {
     db.myPersonaPresets = arr || [];
-    saveData();
+    await saveSetting('myPersonaPresets');
 }
 
 function populateMyPersonaSelect() {
@@ -258,7 +258,7 @@ function populateMyPersonaSelect() {
     });
 }
 
-function saveCurrentMyPersonaAsPreset() {
+async function saveCurrentMyPersonaAsPreset() {
     const personaEl = document.getElementById('setting-my-persona');
     const avatarEl = document.getElementById('setting-my-avatar-preview');
     if (!personaEl || !avatarEl) return showToast('找不到我的人设或头像控件');
@@ -271,7 +271,7 @@ function saveCurrentMyPersonaAsPreset() {
     const idx = presets.findIndex(p => p.name === name);
     const preset = { name, persona, avatar };
     if (idx >= 0) presets[idx] = preset; else presets.push(preset);
-    _saveMyPersonaPresets(presets);
+    await _saveMyPersonaPresets(presets);
     populateMyPersonaSelect();
     showToast('我的人设预设已保存');
 }
@@ -342,12 +342,12 @@ function openManageMyPersonaModal() {
         renameBtn.className = 'btn';
         renameBtn.style.padding = '6px 8px;border-radius:8px';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function(){
+        renameBtn.onclick = async function(){
             const newName = prompt('输入新名称：', p.name);
             if (!newName) return;
             const all = _getMyPersonaPresets();
             all[idx].name = newName;
-            _saveMyPersonaPresets(all);
+            await _saveMyPersonaPresets(all);
             openManageMyPersonaModal();
             populateMyPersonaSelect();
         };
@@ -356,11 +356,11 @@ function openManageMyPersonaModal() {
         deleteBtn.className = 'btn';
         deleteBtn.style.padding = '6px 8px;border-radius:8px;color:#e53935';
         deleteBtn.textContent = '删除';
-        deleteBtn.onclick = function(){
+        deleteBtn.onclick = async function(){
             if (!confirm('确认删除该预设？')) return;
             const all = _getMyPersonaPresets();
             all.splice(idx,1);
-            _saveMyPersonaPresets(all);
+            await _saveMyPersonaPresets(all);
             openManageMyPersonaModal();
             populateMyPersonaSelect();
         };
@@ -379,9 +379,9 @@ function openManageMyPersonaModal() {
 function _getFontPresets() {
     return db.fontPresets || [];
 }
-function _saveFontPresets(arr) {
+async function _saveFontPresets(arr) {
     db.fontPresets = arr || [];
-    saveData();
+    await saveSetting('fontPresets');
 }
 
 function populateFontPresetSelect() {
@@ -400,7 +400,7 @@ function populateFontPresetSelect() {
     });
 }
 
-function saveCurrentFontAsPreset() {
+async function saveCurrentFontAsPreset() {
     const fontUrlInput = document.getElementById('customize-font-url');
     if (!fontUrlInput) return showToast('找不到字体 URL 输入框');
     const url = fontUrlInput.value.trim();
@@ -416,7 +416,7 @@ function saveCurrentFontAsPreset() {
     if (idx >= 0) presets[idx] = preset; 
     else presets.push(preset);
     
-    _saveFontPresets(presets);
+    await _saveFontPresets(presets);
     populateFontPresetSelect();
     showToast('字体预设已保存');
 }
@@ -485,12 +485,12 @@ function openFontManageModal() {
         renameBtn.className = 'btn';
         renameBtn.style.padding = '6px 8px;border-radius:8px';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function(){
+        renameBtn.onclick = async function(){
             const newName = prompt('输入新名称：', p.name);
             if (!newName) return;
             const all = _getFontPresets();
             all[idx].name = newName;
-            _saveFontPresets(all);
+            await _saveFontPresets(all);
             openFontManageModal();
             populateFontPresetSelect();
         };
@@ -503,7 +503,7 @@ function openFontManageModal() {
             if (!confirm('确认删除该预设？')) return;
             const all = _getFontPresets();
             const deletedPreset = all.splice(idx,1)[0];
-            _saveFontPresets(all);
+            await _saveFontPresets(all);
             
             if (deletedPreset.isCustom && deletedPreset.id) {
                 try {
@@ -672,7 +672,7 @@ function setupPresetFeatures() {
             const fileExt = fileName.split('.').pop().toLowerCase();
             const presetName = fileName.substring(0, fileName.lastIndexOf('.'));
 
-            const processImportData = (data) => {
+            const processImportData = async (data) => {
                 try {
                     const presets = _getBubblePresets();
                     const idx = presets.findIndex(p => p.name === data.name);
@@ -686,7 +686,7 @@ function setupPresetFeatures() {
                         presets.push(data);
                     }
                     
-                    _saveBubblePresets(presets);
+                    await _saveBubblePresets(presets);
                     populateBubblePresetSelect('bubble-preset-select'); 
                     populateBubblePresetSelect('group-bubble-preset-select');
                     showToast('预设导入成功');
@@ -856,11 +856,11 @@ function openGlobalCssManageModal() {
         renameBtn.className = 'btn';
         renameBtn.style.padding = '6px 8px';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function() {
+        renameBtn.onclick = async function() {
             const newName = prompt('输入新名称：', p.name);
             if (!newName || newName === p.name) return;
             db.globalCssPresets[idx].name = newName;
-            saveData();
+            await saveSetting('globalCssPresets');
             openGlobalCssManageModal();
             populateGlobalCssPresetSelect();
         };
@@ -869,10 +869,10 @@ function openGlobalCssManageModal() {
         delBtn.className = 'btn btn-danger';
         delBtn.style.padding = '6px 8px';
         delBtn.textContent = '删除';
-        delBtn.onclick = function() {
+        delBtn.onclick = async function() {
             if (!confirm('确定删除预设 "' + p.name + '" ?')) return;
             db.globalCssPresets.splice(idx, 1);
-            saveData();
+            await saveSetting('globalCssPresets');
             openGlobalCssManageModal();
             populateGlobalCssPresetSelect();
         };
@@ -888,9 +888,9 @@ function openGlobalCssManageModal() {
 function _getSoundPresets() {
     return db.soundPresets || [];
 }
-function _saveSoundPresets(arr) {
+async function _saveSoundPresets(arr) {
     db.soundPresets = arr || [];
-    saveData();
+    await saveSetting('soundPresets');
 }
 
 function populateSoundPresetSelect() {
@@ -906,7 +906,7 @@ function populateSoundPresetSelect() {
     });
 }
 
-function saveCurrentSoundAsPreset() {
+async function saveCurrentSoundAsPreset() {
     const sendUrl = document.getElementById('global-send-sound-url').value.trim();
     const receiveUrl = document.getElementById('global-receive-sound-url').value.trim();
     
@@ -922,12 +922,12 @@ function saveCurrentSoundAsPreset() {
     if (idx >= 0) presets[idx] = preset; 
     else presets.push(preset);
     
-    _saveSoundPresets(presets);
+    await _saveSoundPresets(presets);
     populateSoundPresetSelect();
     showToast('提示音预设已保存');
 }
 
-function applySoundPreset(name) {
+async function applySoundPreset(name) {
     const presets = _getSoundPresets();
     const p = presets.find(x => x.name === name);
     if (!p) return showToast('未找到该预设');
@@ -940,7 +940,7 @@ function applySoundPreset(name) {
     
     db.globalSendSound = p.sendSound || '';
     db.globalReceiveSound = p.receiveSound || '';
-    saveData();
+    await Promise.all([saveSetting('globalSendSound'), saveSetting('globalReceiveSound')]);
     
     showToast('已应用提示音预设');
 }
@@ -984,12 +984,12 @@ function openSoundManageModal() {
         renameBtn.className = 'btn';
         renameBtn.style.padding = '6px 8px;border-radius:8px';
         renameBtn.textContent = '重命名';
-        renameBtn.onclick = function(){
+        renameBtn.onclick = async function(){
             const newName = prompt('输入新名称：', p.name);
             if (!newName) return;
             const all = _getSoundPresets();
             all[idx].name = newName;
-            _saveSoundPresets(all);
+            await _saveSoundPresets(all);
             openSoundManageModal();
             populateSoundPresetSelect();
         };
@@ -998,11 +998,11 @@ function openSoundManageModal() {
         deleteBtn.className = 'btn';
         deleteBtn.style.padding = '6px 8px;border-radius:8px;color:#e53935';
         deleteBtn.textContent = '删除';
-        deleteBtn.onclick = function(){
+        deleteBtn.onclick = async function(){
             if (!confirm('确认删除该预设？')) return;
             const all = _getSoundPresets();
             all.splice(idx,1);
-            _saveSoundPresets(all);
+            await _saveSoundPresets(all);
             openSoundManageModal();
             populateSoundPresetSelect();
         };

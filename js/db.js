@@ -529,6 +529,12 @@ const saveData = async () => {
     });
 };
 
+// 单 key 小写入：只保存 globalSettings 中一项，避免重写整个数据库导致写入窗口过大
+const saveSetting = async (key) => {
+    if (!dexieDB || db[key] === undefined) return;
+    await dexieDB.globalSettings.put({ key: key, value: db[key] });
+};
+
 const loadData = async () => {
     const [characters, groups, worldBooks, myStickers, settingsArray] = await Promise.all([
         dexieDB.characters.toArray(),
