@@ -4,52 +4,6 @@ let currentMultiSelectMode = 'delete'; // 'delete' or 'capture'
 let isAddingMessageMode = false;
 let addingAfterMessageId = null;
 
-// 解析双语消息：返回 { foreign, chinese } 或 null
-function parseBilingualText(content) {
-    if (!content) return null;
-    const contentMatch = content.match(/^\[.*?(?:消息|回复)[：:]([\s\S]+)\]$/);
-    if (!contentMatch) return null;
-    const mainText = contentMatch[1].trim();
-    const lastCloseBracket = mainText.lastIndexOf('」');
-    if (lastCloseBracket > -1) {
-        const lastOpenBracket = mainText.lastIndexOf('「', lastCloseBracket);
-        if (lastOpenBracket > -1) {
-            const chinese = mainText.substring(lastOpenBracket + 1, lastCloseBracket).trim();
-            const foreign = mainText.substring(0, lastOpenBracket).trim();
-            if (foreign && chinese) return { foreign, chinese };
-        }
-    }
-    const lastCloseParen = Math.max(mainText.lastIndexOf(')'), mainText.lastIndexOf('）'));
-    if (lastCloseParen > -1) {
-        const lastOpenParen = Math.max(mainText.lastIndexOf('(', lastCloseParen), mainText.lastIndexOf('（', lastCloseParen));
-        if (lastOpenParen > -1) {
-            const chinese = mainText.substring(lastOpenParen + 1, lastCloseParen).trim();
-            const foreign = mainText.substring(0, lastOpenParen).trim();
-            if (foreign && chinese) return { foreign, chinese };
-        }
-    }
-    return null;
-}
-
-function copyTextToClipboard(text) {
-    const fallback = () => {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.cssText = 'position:fixed;left:-9999px;top:0;';
-        document.body.appendChild(ta);
-        ta.select();
-        let ok = false;
-        try { ok = document.execCommand('copy'); } catch (e) {}
-        ta.remove();
-        showToast(ok ? '已复制' : '复制失败');
-    };
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => showToast('已复制')).catch(fallback);
-    } else {
-        fallback();
-    }
-}
-
 function handleMessageLongPress(messageWrapper, x, y) {
     if (isInMultiSelectMode) return;
     clearTimeout(longPressTimer);
@@ -79,15 +33,6 @@ function handleMessageLongPress(messageWrapper, x, y) {
     const isWithdrawn = message.isWithdrawn; 
 
     let menuItems = [];
-
-    // 双语消息：复制原文 / 复制译文
-    if (chat.bilingualModeEnabled && message.role === 'assistant' && !message.isThinking) {
-        const bi = parseBilingualText(message.content);
-        if (bi) {
-            menuItems.push({ label: '复制原文', action: () => copyTextToClipboard(bi.foreign) });
-            menuItems.push({ label: '复制译文', action: () => copyTextToClipboard(bi.chinese) });
-        }
-    }
 
     if (!isWithdrawn) {
         if (!isImageRecognitionMsg && !isVoiceMessage && !isStickerMessage && !isPhotoVideoMessage && !isTransferMessage && !isGiftMessage && !isInvisibleMessage) {
