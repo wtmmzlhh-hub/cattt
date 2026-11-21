@@ -70,7 +70,9 @@ async function getCallReply(chat, callType, callContext, onStreamUpdate) {
         systemPrompt += `2.声音: [${chat.realName}的声音：${chat.realName}说话的内容]\n`;
         
         if (chat.bilingualModeEnabled) {
-            systemPrompt += `3.双语声音: [${chat.realName}的声音：外语原文「中文翻译」]\n  - 当${chat.realName}的母语为中文以外的语言时，你的声音回复**必须**严格遵循双语消息格式。⭐️此条规则的优先级最高！！⭐️\n  - 中文翻译文本视为系统自翻译，不视为角色的原话；当你的角色想要说中文时，需要根据你的角色设定自行判断对于中文的熟悉程度来造句，并使用普通声音的格式。\n  - 仅有声音消息需要翻译，画面/环境音消息还是以中文输出。\n`;
+            const biSrc = biLangName(chat.bilingualSourceLang, '英语');
+            const biTgt = biLangName(chat.bilingualTargetLang, '简体中文');
+            systemPrompt += `3.双语声音: [${chat.realName}的声音：${biSrc}原文「${biTgt}译文」]\n  - 你的声音回复**必须**严格遵循双语消息格式：原文必须用【${biSrc}】，译文必须用【${biTgt}】。⭐️此条规则的优先级最高！！⭐️\n  - 译文请意译，追求自然流畅、符合【${biTgt}】的表达习惯；译文视为系统翻译，不视为角色的原话；当你的角色想直接说【${biTgt}】时，根据角色设定自行判断熟悉程度来造句，并使用普通声音格式。\n  - 仅有声音消息需要翻译，画面/环境音消息还是以中文输出。\n`;
         }
         systemPrompt += `</消息格式库>\n\n`;
         
@@ -209,8 +211,10 @@ async function getCallReply(chat, callType, callContext, onStreamUpdate) {
         systemPrompt += `2. 描述画面/环境音时，请使用描述性语言，第三人称视角，客观平然。`;
 
         if (chat.bilingualModeEnabled) {
+            const biSrc = biLangName(chat.bilingualSourceLang, '英语');
+            const biTgt = biLangName(chat.bilingualTargetLang, '简体中文');
             systemPrompt += `\n3. 【双语模式】\n`;
-            systemPrompt += `当你的角色的母语为中文以外的语言时，你的**声音消息**回复**必须**严格遵循双语模式下的普通消息格式：[${chat.realName}的声音：{外语原文}「中文翻译」],例如: [${chat.realName}的声音：Of course, I'd love to.「当然，我很乐意。」],中文翻译文本视为系统自翻译，不视为角色的原话;当你的角色想要说中文时，需要根据你的角色设定自行判断对于中文的熟悉程度来造句，并使用普通声音消息的标准格式: [${chat.realName}的声音：{中文消息内容}] 。这条规则的优先级非常高，请务必遵守。格式为：[${chat.realName}的声音：{外语原文}「中文翻译」]。\n`;
+            systemPrompt += `你的**声音消息**回复**必须**严格遵循双语消息格式：[${chat.realName}的声音：{${biSrc}原文}「{${biTgt}译文}」]，原文必须用【${biSrc}】，译文必须用【${biTgt}】。译文请意译，追求自然流畅、符合【${biTgt}】的表达习惯，不必逐字直译；译文视为系统翻译，不视为角色的原话；当你的角色想直接说【${biTgt}】时，根据角色设定自行判断熟悉程度来造句，并使用普通声音消息格式。这条规则的优先级非常高，请务必遵守。\n`;
             systemPrompt += `例如：[${chat.realName}的声音：Hello, how are you?「你好，最近怎么样？」]\n`;
             systemPrompt += `仅有声音消息需要翻译，画面/环境音消息还是以中文输出。`;
         }

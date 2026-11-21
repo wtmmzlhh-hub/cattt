@@ -244,6 +244,19 @@ function setupChatSettings() {
         });
     }
 
+    // 双语模式：显隐 原文语言/译文语言/显示样式 三个下拉框
+    const bilingualModeSwitch = document.getElementById('setting-bilingual-mode');
+    if (bilingualModeSwitch) {
+        bilingualModeSwitch.addEventListener('change', (e) => {
+            triggerHapticFeedback('light');
+            const on = e.target.checked;
+            ['setting-bilingual-style-container', 'setting-bilingual-source-container', 'setting-bilingual-target-container'].forEach(id => {
+                const container = document.getElementById(id);
+                if (container) container.style.display = on ? 'flex' : 'none';
+            });
+        });
+    }
+
     // 专属模型开关逻辑 (私聊)
     const exclusiveApiSwitch = document.getElementById('setting-exclusive-api-enabled');
     if (exclusiveApiSwitch) {
@@ -522,6 +535,13 @@ function loadSettingsToSidebar() {
 
         document.getElementById('setting-bilingual-mode').checked = e.bilingualModeEnabled || false;
         document.getElementById('setting-bilingual-style').value = e.bilingualBubbleStyle || 'under';
+        document.getElementById('setting-bilingual-source').value = e.bilingualSourceLang || 'en';
+        document.getElementById('setting-bilingual-target').value = e.bilingualTargetLang || 'zh-CN';
+        const _biOn = e.bilingualModeEnabled || false;
+        ['setting-bilingual-style-container', 'setting-bilingual-source-container', 'setting-bilingual-target-container'].forEach(_id => {
+            const _c = document.getElementById(_id);
+            if (_c) _c.style.display = _biOn ? 'flex' : 'none';
+        });
         
         document.getElementById('setting-avatar-mode').value = e.avatarMode || 'full';
         const avatarRadius = e.avatarRadius !== undefined ? e.avatarRadius : 50;
@@ -834,6 +854,8 @@ async function saveSettingsFromSidebar() {
         e.customBubbleCss = document.getElementById('setting-custom-bubble-css').value;
         e.bilingualModeEnabled = document.getElementById('setting-bilingual-mode').checked;
         e.bilingualBubbleStyle = document.getElementById('setting-bilingual-style').value;
+        e.bilingualSourceLang = document.getElementById('setting-bilingual-source').value;
+        e.bilingualTargetLang = document.getElementById('setting-bilingual-target').value;
         
         e.avatarMode = document.getElementById('setting-avatar-mode').value;
         e.avatarRadius = parseInt(document.getElementById('setting-avatar-radius').value, 10);

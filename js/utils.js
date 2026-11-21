@@ -1,5 +1,11 @@
 // --- 工具函数库 (js/utils.js) ---
 
+// 双语语言码 → 中文名
+function biLangName(code, fallback) {
+    const names = { en: '英语', ja: '日语', ko: '韩语', de: '德语', 'zh-CN': '简体中文', 'zh-TW': '繁体中文' };
+    return names[code] || fallback || code;
+}
+
 // 电池状态更新
 async function updateBatteryStatus() {
     if ('getBattery' in navigator) {

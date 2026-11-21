@@ -143,6 +143,29 @@ const chatSettingsHtml = `
                                     </label>
                                 </div>
                             </div>
+                            <div class="kkt-item" id="setting-bilingual-source-container" style="display: none;">
+                                <div class="kkt-item-label">原文语言</div>
+                                <div class="kkt-item-control">
+                                    <select id="setting-bilingual-source" style="border:none; background:transparent; text-align:right;">
+                                        <option value="en">英语</option>
+                                        <option value="ja">日语</option>
+                                        <option value="ko">韩语</option>
+                                        <option value="de">德语</option>
+                                    </select>
+                                    <span class="kkt-arrow">›</span>
+                                </div>
+                            </div>
+                            <div class="kkt-item" id="setting-bilingual-target-container" style="display: none;">
+                                <div class="kkt-item-label">译文语言</div>
+                                <div class="kkt-item-control">
+                                    <select id="setting-bilingual-target" style="border:none; background:transparent; text-align:right;">
+                                        <option value="zh-CN">简体中文</option>
+                                        <option value="zh-TW">繁体中文</option>
+                                        <option value="en">英语</option>
+                                    </select>
+                                    <span class="kkt-arrow">›</span>
+                                </div>
+                            </div>
                             <div class="kkt-item" id="setting-bilingual-style-container">
                                 <div class="kkt-item-label">翻译显示样式</div>
                                 <div class="kkt-item-control">

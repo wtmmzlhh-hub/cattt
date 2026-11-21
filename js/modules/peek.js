@@ -1751,7 +1751,9 @@ function generatePeekContentPrompt(char, appType, mainChatContext) {
     prompt += `现在，我正在偷看Ta手机上的“${appName}”。请你基于Ta的人设和我们最近的聊天内容，生成符合该应用场景的、高度相关且富有沉浸感的内容。\n`;
     
     if (char.bilingualModeEnabled) {
-        prompt += `✨双语模式特别指令✨：当Ta的母语为中文以外的语言时，你的app内容文本**必须**遵循双语模式下的形式：{外语原文}「中文翻译」,例如: Of course, I'd love to.「当然，我很乐意。」,主要语言逻辑为角色母语，中文翻译文本视为系统自翻译，不视为原话;当需要表达中文时，需要根据角色设定自行判断对于中文的熟悉程度。这条规则的优先级非常高，请务必遵守。\n`;
+        const biSrc = biLangName(char.bilingualSourceLang, '英语');
+        const biTgt = biLangName(char.bilingualTargetLang, '简体中文');
+        prompt += `✨双语模式特别指令✨：你的app内容文本**必须**遵循双语形式：{${biSrc}原文}「{${biTgt}译文}」，原文必须用【${biSrc}】，译文必须用【${biTgt}】。译文请意译，追求自然流畅、符合【${biTgt}】的表达习惯，不必逐字直译；译文视为系统翻译，不视为原话；当需要直接表达【${biTgt}】时，根据角色设定自行判断熟悉程度。这条规则的优先级非常高，请务必遵守。\n`;
     }
 
     prompt += `你的输出必须是XML格式，且只包含XML内容，必须以<result>作为根节点，不要有任何额外的解释或标记。根据应用类型，XML结构如下：\n`;
@@ -1814,7 +1816,9 @@ function generateBatchPeekContentPrompt(char, appTypes, mainChatContext) {
     prompt += `现在，我正在偷看Ta手机上的多个应用。请你基于Ta的人设和我们最近的聊天内容，一次性生成这些应用的内容。\n`;
     
     if (char.bilingualModeEnabled) {
-        prompt += `✨双语模式特别指令✨：当角色的母语为中文以外的语言时，你的app内容文本**必须**遵循双语模式下的形式：{外语原文}「中文翻译」,例如: Of course, I'd love to.「当然，我很乐意。」,主要语言逻辑为角色母语，中文翻译文本视为系统自翻译，不视为原话;当角色需要表达中文时，需要根据角色设定自行判断对于中文的熟悉程度。这条规则的优先级非常高，请务必遵守。\n`;
+        const biSrc = biLangName(char.bilingualSourceLang, '英语');
+        const biTgt = biLangName(char.bilingualTargetLang, '简体中文');
+        prompt += `✨双语模式特别指令✨：你的app内容文本**必须**遵循双语形式：{${biSrc}原文}「{${biTgt}译文}」，原文必须用【${biSrc}】，译文必须用【${biTgt}】。译文请意译，追求自然流畅、符合【${biTgt}】的表达习惯，不必逐字直译；译文视为系统翻译，不视为原话；当需要直接表达【${biTgt}】时，根据角色设定自行判断熟悉程度。这条规则的优先级非常高，请务必遵守。\n`;
     }
 
     prompt += `你的输出必须是XML格式，且只包含XML内容，必须以<result>作为根节点，不要有任何额外的解释或标记。你需要生成的应用内容及对应格式如下：\n`;
