@@ -1448,7 +1448,7 @@
     display: flex;
     gap: 8px;
     flex: 1;
-    overflow-x: auto;
+    justify-content: space-evenly;
     scrollbar-width: none;
     -ms-overflow-style: none;
 }
