@@ -53,6 +53,15 @@ const chatSettingsHtml = `
                                     <!-- JS populate -->
                                 </div>
                             </div>
+                            <div class="kkt-item">
+                                <div class="kkt-item-label">表情包智能匹配</div>
+                                <div class="kkt-item-control">
+                                    <label class="kkt-switch">
+                                        <input type="checkbox" id="setting-smart-sticker-match">
+                                        <span class="kkt-slider"></span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- 关联世界书 (移到我的信息前) -->

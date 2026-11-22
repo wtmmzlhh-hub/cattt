@@ -271,6 +271,58 @@ async function setupStickerSystem() {
             }
         }
     });
+
+    setupStickerSmartMatch();
+}
+
+function getAvailableStickersForCurrentChat() {
+    const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+    if (!chat) return [];
+    const groups = (chat.stickerGroups || '').split(/[,，]/).map(s => s.trim()).filter(s => s && s !== '未分类');
+    return db.myStickers.filter(s => s.group && groups.includes(s.group));
+}
+
+function setupStickerSmartMatch() {
+    const input = document.getElementById('message-input');
+    const bar = document.getElementById('sticker-match-bar');
+    const list = document.getElementById('sticker-match-list');
+    const closeBtn = document.getElementById('sticker-match-close');
+    if (!input || !bar || !list) return;
+
+    const hide = () => { bar.style.display = 'none'; };
+
+    if (closeBtn) closeBtn.addEventListener('click', hide);
+
+    input.addEventListener('input', () => {
+        const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
+        if (!chat || chat.smartStickerMatch === false) { hide(); return; }
+        const q = input.value.trim();
+        if (!q) { hide(); return; }
+        const stickers = getAvailableStickersForCurrentChat()
+            .filter(s => s.name && s.name.includes(q))
+            .sort((a, b) => {
+                const ra = a.name === q ? 0 : a.name.startsWith(q) ? 1 : 2;
+                const rb = b.name === q ? 0 : b.name.startsWith(q) ? 1 : 2;
+                if (ra !== rb) return ra - rb;
+                return (b.lastUsedTime || 0) - (a.lastUsedTime || 0);
+            })
+            .slice(0, 8);
+        if (!stickers.length) { hide(); return; }
+        list.innerHTML = '';
+        stickers.forEach(s => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.className = 'sticker-match-item';
+            item.title = s.name;
+            item.innerHTML = `<img src="${s.data}" alt="${s.name}">`;
+            item.addEventListener('click', () => {
+                sendSticker(s);
+                input.value = '';
+            });
+            list.appendChild(item);
+        });
+        bar.style.display = 'flex';
+    });
 }
 
 function renderStickerCategories() {

@@ -1432,6 +1432,54 @@
     flex-shrink: 0;
 }
 
+#sticker-match-bar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--chat-bottom-bar-bg, #f8f8f8);
+    border-top: 1px solid #eee;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-shrink: 0;
+}
+
+.sticker-match-list {
+    display: flex;
+    gap: 8px;
+    flex: 1;
+    overflow-x: auto;
+}
+
+.sticker-match-item {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sticker-match-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.sticker-match-close {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    color: #999;
+    font-size: 18px;
+    cursor: pointer;
+}
+
 .message-input-area {
     display: flex;
     align-items: center;

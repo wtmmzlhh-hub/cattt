@@ -460,6 +460,7 @@ function loadSettingsToSidebar() {
             });
         }
         
+        document.getElementById('setting-smart-sticker-match').checked = e.smartStickerMatch !== false;
         document.getElementById('setting-my-avatar-preview').src = e.myAvatar;
         document.getElementById('setting-my-name').value = e.myName;
         document.getElementById('setting-my-remark-name').value = e.myRemarkName || '';
@@ -817,6 +818,7 @@ async function saveSettingsFromSidebar() {
             .map(tag => tag.dataset.group)
             .join(',');
         e.stickerGroups = selectedGroups;
+        e.smartStickerMatch = document.getElementById('setting-smart-sticker-match').checked;
 
         e.myAvatar = document.getElementById('setting-my-avatar-preview').src;
         e.myName = document.getElementById('setting-my-name').value;

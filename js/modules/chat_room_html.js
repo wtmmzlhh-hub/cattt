@@ -56,6 +56,10 @@ const chatRoomHtml = `
                 </div>
                 <button id="cancel-reply-btn">×</button>
             </div>
+            <div id="sticker-match-bar" style="display: none;">
+                <div class="sticker-match-list" id="sticker-match-list"></div>
+                <button id="sticker-match-close" class="sticker-match-close" type="button">×</button>
+            </div>
             <div class="message-input-area" id="message-input-default">
                 <button id="toggle-expansion-btn" class="icon-btn circle-bg">
                     <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
