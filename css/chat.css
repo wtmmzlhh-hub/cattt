@@ -1449,6 +1449,12 @@
     gap: 8px;
     flex: 1;
     overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.sticker-match-list::-webkit-scrollbar {
+    display: none;
 }
 
 .sticker-match-item {

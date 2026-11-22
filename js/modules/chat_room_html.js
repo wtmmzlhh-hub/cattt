@@ -58,7 +58,6 @@ const chatRoomHtml = `
             </div>
             <div id="sticker-match-bar" style="display: none;">
                 <div class="sticker-match-list" id="sticker-match-list"></div>
-                <button id="sticker-match-close" class="sticker-match-close" type="button">×</button>
             </div>
             <div class="message-input-area" id="message-input-default">
                 <button id="toggle-expansion-btn" class="icon-btn circle-bg">

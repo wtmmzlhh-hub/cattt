@@ -524,7 +524,9 @@ async function sendMessage() {
     if(window.UwUChatToolsUI?.editing()){try{await window.UwUChatToolsUI.commit();}catch(e){showToast(e.message);}return;}
     const text = messageInput.value.trim();
     if (!text || isGenerating) return;
-    messageInput.value = ''; 
+    messageInput.value = '';
+    const _smb = document.getElementById('sticker-match-bar');
+    if (_smb) _smb.style.display = 'none';
     const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
 
     if (!chat) return;

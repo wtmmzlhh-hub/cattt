@@ -286,12 +286,9 @@ function setupStickerSmartMatch() {
     const input = document.getElementById('message-input');
     const bar = document.getElementById('sticker-match-bar');
     const list = document.getElementById('sticker-match-list');
-    const closeBtn = document.getElementById('sticker-match-close');
     if (!input || !bar || !list) return;
 
     const hide = () => { bar.style.display = 'none'; };
-
-    if (closeBtn) closeBtn.addEventListener('click', hide);
 
     input.addEventListener('input', () => {
         const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
@@ -306,7 +303,7 @@ function setupStickerSmartMatch() {
                 if (ra !== rb) return ra - rb;
                 return (b.lastUsedTime || 0) - (a.lastUsedTime || 0);
             })
-            .slice(0, 8);
+            .slice(0, 5);
         if (!stickers.length) { hide(); return; }
         list.innerHTML = '';
         stickers.forEach(s => {
@@ -315,9 +312,12 @@ function setupStickerSmartMatch() {
             item.className = 'sticker-match-item';
             item.title = s.name;
             item.innerHTML = `<img src="${s.data}" alt="${s.name}">`;
+            item.addEventListener('mousedown', e => e.preventDefault());
             item.addEventListener('click', () => {
                 sendSticker(s);
                 input.value = '';
+                hide();
+                input.focus();
             });
             list.appendChild(item);
         });
