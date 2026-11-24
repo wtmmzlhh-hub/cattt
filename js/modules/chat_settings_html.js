@@ -4,7 +4,7 @@ const chatSettingsHtml = `
             <div class="title-container">
                 <h1 class="title">聊天设置</h1>
             </div>
-            <button type="button" id="save-chat-settings-top" class="action-btn" style="font-size: 15px; color: var(--primary-color, #007AFF);">保存</button>
+            <button type="button" id="save-chat-settings-top" class="action-btn" style="font-size: 15px; color: var(--primary-color, #007AFF); white-space: nowrap; width: auto;">保存</button>
         </header>
         <main class="content">
             <div class="kkt-settings-container">

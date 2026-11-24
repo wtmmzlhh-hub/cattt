@@ -208,6 +208,10 @@ async function setupStickerSystem() {
         }
     });
 
+    // 批量导入：从 txt/docx 文档导入名称+URL 列表
+    const importStickerDocBtn = document.getElementById('import-sticker-doc-btn');
+    if (importStickerDocBtn) importStickerDocBtn.addEventListener('click', () => importDocumentToTextarea('sticker-urls-textarea'));
+
     addStickerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = stickerNameInput.value.trim();
