@@ -1,5 +1,44 @@
 // --- 表情包管理 (js/modules/sticker.js) ---
 
+// 智能解析批量导入文本：兼容 英文/中文冒号、空格、--、JSON 等
+function parseStickerImportText(text) {
+    const stickers = [];
+    const trimmed = (text || '').trim();
+    if (!trimmed) return stickers;
+
+    if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+        try {
+            const data = JSON.parse(trimmed);
+            const push = (item) => {
+                if (!item || typeof item !== 'object') return;
+                const name = (item.name || item.title || '').toString().trim();
+                const url = (item.url || item.data || item.src || item.link || '').toString().trim();
+                if (name && url.startsWith('http')) stickers.push({ name, url });
+            };
+            if (Array.isArray(data)) {
+                data.forEach(push);
+            } else {
+                Object.entries(data).forEach(([k, v]) => {
+                    if (typeof v === 'string') push({ name: k, url: v });
+                    else if (v && typeof v === 'object') push({ name: k, ...v });
+                });
+            }
+            if (stickers.length) return stickers;
+        } catch (e) { /* 非 JSON，继续按行解析 */ }
+    }
+
+    for (const raw of trimmed.split('\n')) {
+        const line = raw.trim();
+        if (!line) continue;
+        const idx = line.search(/https?:\/\//);
+        if (idx <= 0) continue;
+        const name = line.substring(0, idx).replace(/[:：,，、;；|—\-]+$/, '').trim();
+        const url = line.substring(idx).trim();
+        if (name && url.startsWith('http')) stickers.push({ name, url });
+    }
+    return stickers;
+}
+
 async function setupStickerSystem() {
     const stickerMenuBtn = document.getElementById('sticker-menu-btn');
     const stickerMenuActionSheet = document.getElementById('sticker-menu-actionsheet');
@@ -177,25 +216,13 @@ async function setupStickerSystem() {
         const textInput = stickerUrlsTextarea.value.trim();
         const groupName = batchStickerGroupInput.value.trim();
         if (!textInput) return showToast('请输入数据');
-        const lines = textInput.split('\n');
-        const newStickers = [];
-        for (const line of lines) {
-            let trimmedLine = line.trim().replace('：', ':');
-            if (!trimmedLine) continue;
-            const colonIndex = trimmedLine.indexOf(':');
-            if (colonIndex <= 0) continue;
-            const name = trimmedLine.substring(0, colonIndex).trim();
-            const url = trimmedLine.substring(colonIndex + 1).trim();
-            if (name && url.startsWith('http')) {
-                newStickers.push({
-                    id: `sticker_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-                    name: name,
-                    data: url,
-                    group: groupName,
-                    lastUsedTime: Date.now() 
-                });
-            }
-        }
+        const newStickers = parseStickerImportText(textInput).map(s => ({
+            id: `sticker_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: s.name,
+            data: s.url,
+            group: groupName,
+            lastUsedTime: Date.now()
+        }));
         if (newStickers.length > 0) {
             db.myStickers.push(...newStickers);
             await saveData();
