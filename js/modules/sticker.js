@@ -276,10 +276,7 @@ async function setupStickerSystem() {
 }
 
 function getAvailableStickersForCurrentChat() {
-    const chat = (currentChatType === 'private') ? db.characters.find(c => c.id === currentChatId) : db.groups.find(g => g.id === currentChatId);
-    if (!chat) return [];
-    const groups = (chat.stickerGroups || '').split(/[,，]/).map(s => s.trim()).filter(s => s && s !== '未分类');
-    return db.myStickers.filter(s => s.group && groups.includes(s.group));
+    return db.myStickers.filter(s => s && s.name);
 }
 
 function setupStickerSmartMatch() {

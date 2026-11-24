@@ -532,8 +532,17 @@ const saveData = async () => {
 // 单 key 小写入：只保存 globalSettings 中一项，避免重写整个数据库导致写入窗口过大
 const saveSetting = async (key) => {
     if (!dexieDB || db[key] === undefined) return;
-    await dexieDB.globalSettings.put({ key: key, value: db[key] });
+    await dexieDB.transaction('rw', dexieDB.globalSettings, async () => {
+        await dexieDB.globalSettings.put({ key: key, value: db[key] });
+    });
 };
+
+// 切后台/关闭前强制刷盘，减少浏览器回收导致的丢数据
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && typeof db !== 'undefined' && db.characters && typeof saveData === 'function') {
+        try { saveData().catch(() => {}); } catch (e) {}
+    }
+});
 
 const loadData = async () => {
     const [characters, groups, worldBooks, myStickers, settingsArray] = await Promise.all([

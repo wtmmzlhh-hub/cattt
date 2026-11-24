@@ -2,7 +2,7 @@
 
 // 双语语言码 → 中文名
 function biLangName(code, fallback) {
-    const names = { en: '英语', ja: '日语', ko: '韩语', de: '德语', 'zh-CN': '简体中文', 'zh-TW': '繁体中文' };
+    const names = { en: '英语', ja: '日语', ko: '韩语', de: '德语', 'zh-CN': '简体中文', 'zh-TW': '繁体中文', yue: '粤语', nan: '台湾话' };
     return names[code] || fallback || code;
 }
 

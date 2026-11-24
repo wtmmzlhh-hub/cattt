@@ -160,6 +160,8 @@ const chatSettingsHtml = `
                                         <option value="ja">日语</option>
                                         <option value="ko">韩语</option>
                                         <option value="de">德语</option>
+                                        <option value="yue">粤语</option>
+                                        <option value="nan">台湾话</option>
                                     </select>
                                     <span class="kkt-arrow">›</span>
                                 </div>
