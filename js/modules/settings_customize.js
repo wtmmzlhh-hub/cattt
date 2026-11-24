@@ -59,6 +59,10 @@ function setupCustomizeApp() {
             await saveData();
             showToast('全局样式已应用');
         }
+
+        if (target.matches('#import-global-css-btn')) {
+            importDocumentToTextarea('global-beautification-css');
+        }
         
         if (target.matches('#global-css-apply-btn')) {
             const select = document.getElementById('global-css-preset-select');
@@ -521,7 +525,10 @@ function renderCustomizeForm() {
                 <div class="form-group" style="margin-top: 15px; margin-bottom: 15px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                         <label for="global-beautification-css" style="font-weight: bold; font-size: 14px; color: var(--primary-color); margin-bottom: 0;">CSS代码</label>
-                        <button type="button" id="apply-global-css-now-btn" class="btn btn-primary btn-small" style="width:auto;">立即应用</button>
+                        <div style="display:flex; gap:8px;">
+                            <button type="button" id="import-global-css-btn" class="btn btn-neutral btn-small" style="width:auto;">导入</button>
+                            <button type="button" id="apply-global-css-now-btn" class="btn btn-primary btn-small" style="width:auto;">立即应用</button>
+                        </div>
                     </div>
                     <textarea id="global-beautification-css" class="form-group" rows="8" placeholder="在此输入CSS代码..." style="width:100%; border:1px solid #eee; border-radius:8px; padding:10px; font-family: monospace; font-size: 12px;"></textarea>
                 </div>

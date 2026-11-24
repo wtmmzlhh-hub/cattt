@@ -54,6 +54,28 @@ function setupChatSettings() {
         saveSettingsFromSidebar();
     });
 
+    // 顶部保存按钮
+    const _saveTopBtn = document.getElementById('save-chat-settings-top');
+    if (_saveTopBtn) _saveTopBtn.addEventListener('click', () => saveSettingsFromSidebar());
+
+    // 人设文档导入
+    const _importPersonaBtn = document.getElementById('import-persona-btn');
+    if (_importPersonaBtn) _importPersonaBtn.addEventListener('click', () => importDocumentToTextarea('setting-char-persona'));
+
+    // 自动保存：改动后防抖静默保存
+    let _settingsSaveTimer = null;
+    const _autoSaveSettings = () => {
+        clearTimeout(_settingsSaveTimer);
+        _settingsSaveTimer = setTimeout(() => {
+            try { saveSettingsFromSidebar(true); } catch (e) {}
+        }, 800);
+    };
+    const _chatSettingsForm = document.getElementById('chat-settings-form');
+    if (_chatSettingsForm) {
+        _chatSettingsForm.addEventListener('input', _autoSaveSettings);
+        _chatSettingsForm.addEventListener('change', _autoSaveSettings);
+    }
+
     // --- Tab 切换逻辑 ---
     // 仅选择聊天设置和群聊设置中的 Tab，排除 CoT 设置
     const tabs = document.querySelectorAll('#chat-settings-screen .settings-tab-item, #group-settings-screen .settings-tab-item');
@@ -783,7 +805,7 @@ function initTextareaSearchReplace(toolbarId, textareaId) {
     });
 }
 
-async function saveSettingsFromSidebar() {
+async function saveSettingsFromSidebar(silent) {
     const e = db.characters.find(e => e.id === currentChatId);
     if (e) {
         let nextLocation;
@@ -930,7 +952,7 @@ async function saveSettingsFromSidebar() {
         e.useRealGallery = document.getElementById('setting-use-real-gallery').checked;
 
         await saveData();
-        showToast('设置已保存！');
+        if (!silent) showToast('设置已保存！');
         chatRoomTitle.textContent = e.remarkName;
         renderChatList();
         // updateCustomBubbleStyle(currentChatId, e.customBubbleCss, e.useCustomBubbleCss); // 移除实时应用以防污染设置页

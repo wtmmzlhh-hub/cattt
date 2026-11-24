@@ -57,6 +57,25 @@ function setupAirDropPanelBtn() {
     }
 }
 
+// 状态栏颜色跟随当前页顶栏底色
+function syncThemeColorToHeader() {
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (!meta) return;
+    const header = document.querySelector('.screen.active .app-header');
+    if (!header) { meta.setAttribute('content', 'transparent'); return; }
+    const bg = getComputedStyle(header).backgroundColor;
+    const m = bg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/);
+    if (!m) { meta.setAttribute('content', bg); return; }
+    const r = +m[1], g = +m[2], b = +m[3], a = m[4] !== undefined ? parseFloat(m[4]) : 1;
+    let solid;
+    if (a >= 1) {
+        solid = `rgb(${r}, ${g}, ${b})`;
+    } else {
+        solid = `rgb(${Math.round(r*a + 255*(1-a))}, ${Math.round(g*a + 255*(1-a))}, ${Math.round(b*a + 255*(1-a))})`;
+    }
+    meta.setAttribute('content', solid);
+}
+
 // 屏幕切换
 const switchScreen = (targetId) => {
     if(targetId==='home-screen')window.UwUWidgetStyles?.sync();
@@ -82,6 +101,7 @@ const switchScreen = (targetId) => {
     document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
     const targetScreen = document.getElementById(targetId);
     if (targetScreen) targetScreen.classList.add('active');
+    syncThemeColorToHeader();
     
     // 关闭所有覆盖层和侧边栏
     const overlays = document.querySelectorAll('.modal-overlay, .action-sheet-overlay, .settings-sidebar');

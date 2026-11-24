@@ -13,6 +13,16 @@ if ('serviceWorker' in navigator) {
     });
 }
 
+// Chrome 键盘弹起时保持页面钉住，不整体上抬
+if (window.visualViewport) {
+    const _syncVvh = () => {
+        document.documentElement.style.setProperty('--vvh', window.visualViewport.height + 'px');
+    };
+    _syncVvh();
+    window.visualViewport.addEventListener('resize', _syncVvh);
+    window.visualViewport.addEventListener('scroll', _syncVvh);
+}
+
 const init = async () => {
     await loadData();
     if (typeof ensureAllChatArchives === 'function') {

@@ -4,7 +4,7 @@ const chatSettingsHtml = `
             <div class="title-container">
                 <h1 class="title">聊天设置</h1>
             </div>
-            <div class="placeholder"></div>
+            <button type="button" id="save-chat-settings-top" class="action-btn" style="font-size: 15px; color: var(--primary-color, #007AFF);">保存</button>
         </header>
         <main class="content">
             <div class="kkt-settings-container">
@@ -43,7 +43,10 @@ const chatSettingsHtml = `
                                 </div>
                             </div>
                             <div class="kkt-item" style="flex-direction:column; align-items:flex-start;">
-                                <div class="kkt-item-label" style="margin-bottom:8px;">角色人设</div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:8px;">
+                                    <div class="kkt-item-label" style="margin-bottom:0;">角色人设</div>
+                                    <button type="button" id="import-persona-btn" class="btn btn-neutral btn-small" style="margin:0;">导入</button>
+                                </div>
                                 <textarea id="setting-char-persona" style="width:100%; border:1px solid #eee; border-radius:8px; padding:8px; min-height:80px;" placeholder="详细描述角色的性格..."></textarea>
                             </div>
                              <!-- 表情包分组 -->

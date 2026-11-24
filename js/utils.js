@@ -6,6 +6,37 @@ function biLangName(code, fallback) {
     return names[code] || fallback || code;
 }
 
+// 导入 txt/docx 文档内容到指定文本框
+function importDocumentToTextarea(textareaId) {
+    const textarea = document.getElementById(textareaId);
+    if (!textarea) return;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.txt,.docx,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const ext = (file.name.split('.').pop() || '').toLowerCase();
+        try {
+            if (ext === 'docx') {
+                if (typeof mammoth === 'undefined') { showToast('缺少文档解析库'); return; }
+                const arrayBuffer = await file.arrayBuffer();
+                const result = await mammoth.extractRawText({ arrayBuffer });
+                textarea.value = result.value || '';
+            } else {
+                const text = await file.text();
+                textarea.value = text || '';
+            }
+            showToast('导入成功');
+        } catch (err) {
+            showToast('导入失败：' + err.message);
+        } finally {
+            input.value = '';
+        }
+    };
+    input.click();
+}
+
 // 电池状态更新
 async function updateBatteryStatus() {
     if ('getBattery' in navigator) {
