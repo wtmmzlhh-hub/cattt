@@ -1422,7 +1422,7 @@ async function handleRegenerate() {
         recalculateChatStatus(chat);
     }
 
-    await saveData();
+    await saveCurrentChat();
     
     currentPage = 1; 
     renderMessages(false, true); 

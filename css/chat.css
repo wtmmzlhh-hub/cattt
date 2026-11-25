@@ -1438,6 +1438,12 @@
     border-bottom: 1px solid #c0c4c9;
 }
 
+#chat-list-screen .app-header {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid #eee;
+}
+
 .btn-primary {
     background: linear-gradient(to bottom, #4dabf7 0%, #228be6 100%);
     border: 1px solid #1c7ed6;

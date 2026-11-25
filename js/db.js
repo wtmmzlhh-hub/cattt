@@ -537,6 +537,18 @@ const saveSetting = async (key) => {
     });
 };
 
+// 只写当前聊天记录（小写入，减少整库重写导致的丢数据）
+const saveCurrentChat = async () => {
+    if (!dexieDB) return;
+    if (currentChatType === 'private') {
+        const c = db.characters.find(x => x.id === currentChatId);
+        if (c) await dexieDB.characters.put(c);
+    } else {
+        const g = db.groups.find(x => x.id === currentChatId);
+        if (g) await dexieDB.groups.put(g);
+    }
+};
+
 // 切后台/关闭前强制刷盘，减少浏览器回收导致的丢数据
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && typeof db !== 'undefined' && db.characters && typeof saveData === 'function') {

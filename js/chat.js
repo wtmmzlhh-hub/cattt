@@ -606,7 +606,7 @@ async function sendMessage() {
         promptForBackupIfNeeded('history_milestone');
     }
 
-    try { await saveData(); } catch(error) { console.error('消息保存失败',error);showToast('消息尚未保存成功，请保留应用并重试保存');return; }
+    try { await saveCurrentChat(); } catch(error) { console.error('消息保存失败',error);showToast('消息尚未保存成功，请保留应用并重试保存');return; }
     renderChatList();
 
     if (currentQuoteInfo) {
