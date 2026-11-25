@@ -543,6 +543,11 @@ document.addEventListener('visibilitychange', () => {
         try { saveData().catch(() => {}); } catch (e) {}
     }
 });
+document.addEventListener('pagehide', () => {
+    if (typeof db !== 'undefined' && db.characters && typeof saveData === 'function') {
+        try { saveData().catch(() => {}); } catch (e) {}
+    }
+});
 
 const loadData = async () => {
     const [characters, groups, worldBooks, myStickers, settingsArray] = await Promise.all([

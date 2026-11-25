@@ -13,14 +13,17 @@ if ('serviceWorker' in navigator) {
     });
 }
 
-// Chrome 键盘弹起时保持页面钉住，不整体上抬
+// 键盘弹起时保持页面钉住；防抖避免底栏上下抖动
 if (window.visualViewport) {
+    let _vvhTimer = null;
     const _syncVvh = () => {
-        document.documentElement.style.setProperty('--vvh', window.visualViewport.height + 'px');
+        clearTimeout(_vvhTimer);
+        _vvhTimer = setTimeout(() => {
+            document.documentElement.style.setProperty('--vvh', window.visualViewport.height + 'px');
+        }, 120);
     };
     _syncVvh();
     window.visualViewport.addEventListener('resize', _syncVvh);
-    window.visualViewport.addEventListener('scroll', _syncVvh);
 }
 
 const init = async () => {
