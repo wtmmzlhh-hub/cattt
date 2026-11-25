@@ -2,7 +2,7 @@
 
 .phone-screen {
     width: 100%;
-    height: var(--vvh, 100dvh);
+    height: 100dvh;
     background-color: #ffffff;
     overflow: hidden;
     position: fixed; /* 关键：锁定容器，防止被 iOS 顶起 */
